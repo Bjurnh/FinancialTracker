@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:FinanceTracker.UI.ViewModels"
+             x:Class="FinanceTracker.UI.Views.TransactionsPage"
+             Title="Transactions">
+
+    <ContentPage.BindingContext>
+        <!-- Injected via constructor, not here -->
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="Auto,*" Padding="16" RowSpacing="12">
+
+        <!-- Add Transaction Form -->
+        <VerticalStackLayout Grid.Row="0" Spacing="8">
+            <Entry Placeholder="Title" Text="{Binding NewTitle}"/>
+            <Entry Placeholder="Amount" Text="{Binding NewAmount}" Keyboard="Numeric"/>
+            <Entry Placeholder="Category" Text="{Binding NewCategory}"/>
+            <HorizontalStackLayout Spacing="8">
+                <Label Text="Income?" VerticalOptions="Center"/>
+                <Switch IsToggled="{Binding IsIncome}"/>
+            </HorizontalStackLayout>
+            <Button Text="Add Transaction"
+                    Command="{Binding AddTransactionCommand}"
+                    HorizontalOptions="Start"/>
+        </VerticalStackLayout>
+
+        <!-- Transactions List -->
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Transactions}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="*,Auto,Auto" Padding="0,8">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="{Binding Title}" FontAttributes="Bold"/>
+                            <Label Text="{Binding Category}"
+                                   FontSize="12"
+                                   TextColor="Gray"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="1"
+                               Text="{Binding Amount, StringFormat='${0:F2}'}"
+                               VerticalOptions="Center"
+                               Margin="0,0,12,0"/>
+                        <Button Grid.Column="2"
+                                Text="Delete"
+                                CommandParameter="{Binding Id}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TransactionsViewModel}}, Path=DeleteTransactionCommand}"/>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+</ContentPage>
